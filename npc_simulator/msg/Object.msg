@@ -2,8 +2,8 @@ std_msgs/Header header
 unique_identifier_msgs/UUID id
 dummy_perception_publisher/InitialState initial_state
 sensor_msgs/Imu imu
-autoware_perception_msgs/Semantic semantic
-autoware_perception_msgs/Shape shape
+autoware_auto_perception_msgs/ObjectClassification classification
+autoware_auto_perception_msgs/Shape shape
 npc_simulator/LaneFollowMode lane_follow_mode
 npc_simulator/LaneChangeDir lane_change_dir
 int32 lane_change_id

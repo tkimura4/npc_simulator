@@ -32,8 +32,8 @@ set(service_files
   srv/GetObject.srv
 )
 set(msg_dependencies
-  autoware_perception_msgs
-  autoware_vehicle_msgs
+  autoware_auto_perception_msgs
+  autoware_auto_vehicle_msgs
   dummy_perception_publisher
   geometry_msgs
   std_msgs

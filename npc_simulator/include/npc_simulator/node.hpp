@@ -15,34 +15,32 @@
 #ifndef NPC_SIMULATOR__NODE_HPP_
 #define NPC_SIMULATOR__NODE_HPP_
 
+#include "dummy_perception_publisher/msg/object.hpp"
+#include "lanelet2_core/geometry/Lanelet.h"
+#include "lanelet2_extension/utility/utilities.hpp"
+#include "npc_simulator/msg/object.hpp"
+#include "npc_simulator/srv/get_object.hpp"
+#include "rclcpp/rclcpp.hpp"
+#include "tf2/LinearMath/Transform.h"
+#include "tf2/convert.h"
+#include "tf2/transform_datatypes.h"
+#include "tf2/utils.h"
+#include "tf2_ros/buffer.h"
+#include "tf2_ros/transform_listener.h"
+#include "vehicle_info_util/vehicle_info.hpp"
+
+#include "autoware_auto_mapping_msgs/msg/had_map_bin.hpp"
+#include "autoware_auto_perception_msgs/msg/object_classification.hpp"
+#include "autoware_auto_perception_msgs/msg/predicted_objects.hpp"
+#include "autoware_auto_vehicle_msgs/msg/engage.hpp"
+#include "sensor_msgs/msg/point_cloud2.hpp"
+#include "tf2_geometry_msgs/tf2_geometry_msgs.h"
+
 #include <memory>
 #include <random>
 #include <string>
 #include <tuple>
 #include <vector>
-
-#include "npc_simulator/msg/object.hpp"
-#include "npc_simulator/srv/get_object.hpp"
-
-#include "autoware_lanelet2_msgs/msg/map_bin.hpp"
-#include "autoware_perception_msgs/msg/dynamic_object_array.hpp"
-#include "autoware_vehicle_msgs/msg/engage.hpp"
-#include "dummy_perception_publisher/msg/object.hpp"
-#include "lanelet2_core/geometry/Lanelet.h"
-#include "lanelet2_extension/utility/utilities.hpp"
-#include "vehicle_info_util/vehicle_info.hpp"
-
-#include "tf2/LinearMath/Transform.h"
-#include "tf2/convert.h"
-#include "tf2/transform_datatypes.h"
-#include "tf2/utils.h"
-#include "tf2_geometry_msgs/tf2_geometry_msgs.h"
-#include "tf2_ros/buffer.h"
-#include "tf2_ros/transform_listener.h"
-
-#include "rclcpp/rclcpp.hpp"
-#include "sensor_msgs/msg/point_cloud2.hpp"
-
 
 class NPCSimulator
 {
@@ -52,11 +50,11 @@ private:
 
   rclcpp::Publisher<dummy_perception_publisher::msg::Object>::SharedPtr
     dummy_perception_object_pub_;
-  rclcpp::Publisher<autoware_perception_msgs::msg::DynamicObjectArray>::SharedPtr
+  rclcpp::Publisher<autoware_auto_perception_msgs::msg::PredictedObjects>::SharedPtr
     debug_object_pub_;  // for visualization
-  rclcpp::Subscription<autoware_vehicle_msgs::msg::Engage>::SharedPtr engage_sub_;
+  rclcpp::Subscription<autoware_auto_vehicle_msgs::msg::Engage>::SharedPtr engage_sub_;
   rclcpp::Subscription<npc_simulator::msg::Object>::SharedPtr object_sub_;
-  rclcpp::Subscription<autoware_lanelet2_msgs::msg::MapBin>::SharedPtr map_sub_;
+  rclcpp::Subscription<autoware_auto_mapping_msgs::msg::HADMapBin>::SharedPtr map_sub_;
   rclcpp::Subscription<geometry_msgs::msg::PoseStamped>::SharedPtr pose_sub_;
   rclcpp::Service<npc_simulator::srv::GetObject>::SharedPtr getobject_srv_;
   rclcpp::TimerBase::SharedPtr timer_main_;
@@ -130,13 +128,13 @@ private:
   void inputVelocityZ(
     npc_simulator::msg::Object * obj, const double prev_z_pos, const double delta_time);
 
-  void engageCallback(const autoware_vehicle_msgs::msg::Engage::ConstSharedPtr engage);
+  void engageCallback(const autoware_auto_vehicle_msgs::msg::Engage::ConstSharedPtr engage);
   void objectCallback(const npc_simulator::msg::Object::ConstSharedPtr msg);
-  void mapCallback(const autoware_lanelet2_msgs::msg::MapBin::ConstSharedPtr msg);
+  void mapCallback(const autoware_auto_mapping_msgs::msg::HADMapBin::ConstSharedPtr msg);
   void poseCallback(const geometry_msgs::msg::PoseStamped::ConstSharedPtr msg);
   dummy_perception_publisher::msg::Object convertObjectMsgToDummyPerception(
     npc_simulator::msg::Object * obj);
-  autoware_perception_msgs::msg::DynamicObjectArray convertObjectMsgToAutowarePerception(
+  autoware_auto_perception_msgs::msg::PredictedObjects convertObjectMsgToAutowarePerception(
     const std::vector<npc_simulator::msg::Object> & obj_vec, const bool prediction);
 
   // parameter
