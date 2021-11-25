@@ -47,8 +47,8 @@ NPCSimCarInitialPoseTool::NPCSimCarInitialPoseTool()
 
   topic_property_ = new rviz_common::properties::StringProperty(
     "Pose Topic", "/simulation/npc_simulator/object_info",
-    "The topic on which to publish dummy object info.", 
-    getPropertyContainer(), SLOT(updateTopic()), this);
+    "The topic on which to publish dummy object info.", getPropertyContainer(), SLOT(updateTopic()),
+    this);
   std_dev_x_ = new rviz_common::properties::FloatProperty(
     "X std deviation", 0.03, "X standard deviation for initial pose [m]", getPropertyContainer());
   std_dev_y_ = new rviz_common::properties::FloatProperty(
@@ -78,10 +78,9 @@ void NPCSimCarInitialPoseTool::onInitialize()
 
 void NPCSimCarInitialPoseTool::updateTopic()
 {
-  rclcpp::Node::SharedPtr raw_node = 
-    context_->getRosNodeAbstraction().lock()->get_raw_node();
-  dummy_object_info_pub_ = raw_node->
-    create_publisher<npc_simulator::msg::Object>(topic_property_->getStdString(), 1);
+  rclcpp::Node::SharedPtr raw_node = context_->getRosNodeAbstraction().lock()->get_raw_node();
+  dummy_object_info_pub_ =
+    raw_node->create_publisher<npc_simulator::msg::Object>(topic_property_->getStdString(), 1);
   clock_ = raw_node->get_clock();
 }
 
@@ -122,16 +121,16 @@ void NPCSimCarInitialPoseTool::onPoseSet(double x, double y, double theta)
   tf2::Quaternion quat;
   quat.setRPY(0.0, 0.0, theta);
   output_msg.initial_state.pose_covariance.pose.orientation = tf2::toMsg(quat);
-  RCLCPP_INFO(rclcpp::get_logger("NPCSimCarInitialPoseTool"),
-    "Setting pose: %.3f %.3f %.3f %.3f [frame=%s]", x, y, position_z_->getFloat(), theta,
-    fixed_frame.c_str());
+  RCLCPP_INFO(
+    rclcpp::get_logger("NPCSimCarInitialPoseTool"), "Setting pose: %.3f %.3f %.3f %.3f [frame=%s]",
+    x, y, position_z_->getFloat(), theta, fixed_frame.c_str());
   // twist
   output_msg.initial_state.twist_covariance.twist.linear.x = velocity_->getFloat();
   output_msg.initial_state.twist_covariance.twist.linear.y = 0.0;
   output_msg.initial_state.twist_covariance.twist.linear.z = 0.0;
-  RCLCPP_INFO(rclcpp::get_logger("NPCSimCarInitialPoseTool"),
-    "Setting twist: %.3f %.3f %.3f [frame=%s]", velocity_->getFloat(), 0.0, 0.0,
-    fixed_frame.c_str());
+  RCLCPP_INFO(
+    rclcpp::get_logger("NPCSimCarInitialPoseTool"), "Setting twist: %.3f %.3f %.3f [frame=%s]",
+    velocity_->getFloat(), 0.0, 0.0, fixed_frame.c_str());
 
   // action
   output_msg.action = npc_simulator::msg::Object::ADD;

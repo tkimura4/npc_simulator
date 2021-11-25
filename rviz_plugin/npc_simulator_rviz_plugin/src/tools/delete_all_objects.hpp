@@ -48,6 +48,7 @@ namespace rviz_plugins
 class NPCSimDeleteAllObjectsTool : public rviz_default_plugins::tools::PoseTool
 {
   Q_OBJECT
+
 public:
   NPCSimDeleteAllObjectsTool();
   virtual ~NPCSimDeleteAllObjectsTool() {}

@@ -48,6 +48,7 @@ namespace rviz_plugins
 class NPCSimCarInitialPoseTool : public rviz_default_plugins::tools::PoseTool
 {
   Q_OBJECT
+
 public:
   NPCSimCarInitialPoseTool();
   virtual ~NPCSimCarInitialPoseTool() {}
